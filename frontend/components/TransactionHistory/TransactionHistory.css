@@ -1,0 +1,31 @@
+/* styles.css */
+.custom-table .ant-table {
+    border-color: #38435a !important; /* Table border color */
+  }
+  
+  .custom-table .ant-table-thead > tr > th {
+    background-color: #1D222E !important; /* Header background color */
+    color: white !important; /* Header text color */
+    border-color: #38435a !important; /* Header border color */
+  }
+  
+  .custom-table .ant-table-tbody > tr > td {
+    background-color: #151921 !important; /* Body background color */
+    color: white !important; /* Body text color */
+    border-color: #38435a !important; /* Body row border color */
+  }
+  
+  .custom-table .ant-table-tbody > tr:hover > td {
+    background-color: #1E2A38 !important; /* Hover row background color */
+  }
+  
+  .custom-table .ant-pagination-item {
+    border-color: #38435a !important;
+  }
+  
+  .custom-table .ant-pagination-item-active {
+    border-color: #38435a !important;
+    background-color: #151921 !important;
+    color: white !important;
+  }
+  

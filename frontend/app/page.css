@@ -1,0 +1,20 @@
+.ant-select-selector {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.ant-input::placeholder,  .ant-select-selection-item::placeholder, .ant-select-selection-search::placeholder {
+  color: #38435a !important;
+}
+
+.ant-select-selection-item{
+  color: #ffffff;
+}
+
+.ant-select-selection-search{
+  color: #ffffff;
+}
+
+.h33{
+  color: aqua;
+}

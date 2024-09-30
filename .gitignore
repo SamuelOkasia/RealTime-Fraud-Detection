@@ -1,0 +1,62 @@
+# General ignores
+*.log
+*.tmp
+.DS_Store
+
+# Python specific
+*.pyc
+__pycache__/
+.venv/
+env/
+
+# Docker related
+.dockerignore
+docker-compose.yml
+
+# Node.js (frontend)
+node_modules/
+frontend/node_modules/
+
+# Ignore build files (frontend)
+frontend/build/
+frontend/.next/
+frontend/out/
+
+# Local environment files
+backend/.env
+frontend/.env
+.env*.local
+
+# Next.js specific
+frontend/.pnp
+frontend.pnp.js
+frontend/.yarn/install-state.gz
+frontend/.vercel
+
+# TypeScript (if you're using it in frontend)
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# Testing
+frontend/coverage/
+
+# Production
+frontend/.next/
+frontend/build/
+
+# Debugging logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backend manual scripts
+backend/app/manual_scripts/
+
+# Instructions for myself
+instructions/
+
+# Instructions for myself
+check.py
+
+# Ignore migrations cache (if required)
+backend/migrations/__pycache__/
