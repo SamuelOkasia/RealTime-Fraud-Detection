@@ -344,5 +344,6 @@ AWS CloudWatch is responsible for monitoring AWS infrastructure resources, such 
 Prometheus, Grafana, and CloudWatch work together to provide comprehensive monitoring:
 - Prometheus tracks application-level metrics.
 - Grafana visualizes these metrics and triggers alerts.
-- CloudWatch monitors AWS infrastructure and system-level logs.#   R e a l T i m e - F r a u d - D e t e c t i o n  
+- CloudWatch monitors AWS infrastructure and system-level logs.#   R e a l T i m e - F r a u d - D e t e c t i o n 
+ 
  
