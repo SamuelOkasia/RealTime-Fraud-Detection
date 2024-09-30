@@ -5,6 +5,8 @@
 ### Description
 The Real-Time Fraud Detection System is designed to detect fraudulent transactions in real-time. Built using a microservice architecture and deployed on AWS, it efficiently handles transaction processing with Kafka, provides real-time notifications with WebSockets, and persists transaction data with PostgreSQL.
 
+**[Live Demo]([https://your-deployed-site-url.com](http://fraud-detection-alb-467209949.eu-west-2.elb.amazonaws.com/))**
+
 ### Tech Stack
 - **Frontend:** React (JavaScript)
 - **Backend:** FastAPI (Python)
