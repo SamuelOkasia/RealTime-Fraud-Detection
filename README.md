@@ -5,6 +5,8 @@
 ### Description
 The Real-Time Fraud Detection System is designed to detect fraudulent transactions in real-time. Built using a microservice architecture and deployed on AWS, it efficiently handles transaction processing with Kafka, provides real-time notifications with WebSockets, and persists transaction data with PostgreSQL.
 
+**[Live Demo](http://fraud-detection-alb-467209949.eu-west-2.elb.amazonaws.com/)**
+
 ### Tech Stack
 - **Frontend:** React (JavaScript)
 - **Backend:** FastAPI (Python)
@@ -344,5 +346,4 @@ AWS CloudWatch is responsible for monitoring AWS infrastructure resources, such 
 Prometheus, Grafana, and CloudWatch work together to provide comprehensive monitoring:
 - Prometheus tracks application-level metrics.
 - Grafana visualizes these metrics and triggers alerts.
-- CloudWatch monitors AWS infrastructure and system-level logs.#   R e a l T i m e - F r a u d - D e t e c t i o n  
- 
+- CloudWatch monitors AWS infrastructure and system-level logs.# RealTime-Fraud-Detection
