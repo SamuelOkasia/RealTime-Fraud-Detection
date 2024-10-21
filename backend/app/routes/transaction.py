@@ -111,7 +111,7 @@ async def websocket_endpoint(websocket: WebSocket, db: Session = Depends(get_db)
 
         # Step 2: Keep the WebSocket connection open to push real-time updates
         while True:
-            await websocket.receive_text()  # Listen for incoming messages (optional)
+            await websocket.receive_text()  # Listen for incoming messages 
 
     except Exception as e:
         # Log any errors that occur during the WebSocket interaction

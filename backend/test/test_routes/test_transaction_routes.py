@@ -14,7 +14,7 @@ def test_post_transaction():
     }
 
     # Send POST request to the transaction route
-    response = client.post("/transaction", json=transaction_data)
+    response = client.post("/api/transaction", json=transaction_data)
 
     # Check if the response status code is 200 OK
     assert response.status_code == 200

@@ -75,6 +75,22 @@ export default function Home() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', margin: '2rem 0' }}>
       <Title level={2} style={{ color: '#ffffff' }}>Real-Time Fraud Detection</Title>
+
+       {/* Informational message about Kafka service being down */}
+       <Alert 
+          message="Due to the running cost of using AWS Kafka, the Kafka service is currently not running. For demonstration purposes, please watch the video below showing the full Fraud Detection service in action."
+          type="info"
+          showIcon 
+        />
+
+
+      {/* Embedded local video for demonstration purposes */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
+        <video width="560" height="315" controls>
+          <source src="/videos/demo.mp4" type="video/mp4" />  {/* Path to local video */}
+          Your browser does not support the video tag.
+        </video>
+      </div>
       
       {error && <Alert message={error} type="error" showIcon />}  // Display error alert if error occurs
       
