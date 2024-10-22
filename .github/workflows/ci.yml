@@ -1,4 +1,4 @@
-name: CI Pipeline for Fraud Detection
+name: CI / CD Pipeline for Fraud Detection
 
 on:
   push:
@@ -90,12 +90,14 @@ jobs:
     - name: Register new backend task definition
       id: register-backend-task
       run: |
-        BACKEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task:9)
+        BACKEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task:9)    
         echo "Creating new backend task definition revision..."
-        BACKEND_NEW_TASK=$(echo $BACKEND_TASK_DEFINITION | jq --arg IMAGE "samuelokasia/realtime-fraud-backend:latest" '.taskDefinition | .containerDefinitions[0].image=$IMAGE | del(.status,.taskDefinitionArn,.revision,.requiresAttributes,.compatibilities)')
+        BACKEND_NEW_TASK=$(echo $BACKEND_TASK_DEFINITION | jq '.taskDefinition | 
+          del(.status, .taskDefinitionArn, .revision, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy) |
+          .containerDefinitions[0].image = "samuelokasia/realtime-fraud-backend:latest"')
         echo $BACKEND_NEW_TASK > backend-task.json
         aws ecs register-task-definition --cli-input-json file://backend-task.json
-    
+      
     - name: Update backend service
       run: |
         NEW_BACKEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task --query 'taskDefinition.revision' --output text)
