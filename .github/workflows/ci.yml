@@ -102,16 +102,19 @@ jobs:
       run: |
         NEW_BACKEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task --query 'taskDefinition.revision' --output text)
         aws ecs update-service --cluster RealTime-Fraud-Detection --service backend-service --task-definition fraud-detection-backend-task:$NEW_BACKEND_REVISION
-    
+
     - name: Register new frontend task definition
       id: register-frontend-task
       run: |
         FRONTEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-frontend-task:18)
-        echo "Creating new frontend task definition revision..."
-        FRONTEND_NEW_TASK=$(echo $FRONTEND_TASK_DEFINITION | jq --arg IMAGE "samuelokasia/realtime-fraud-frontend:latest" '.taskDefinition | .containerDefinitions[0].image=$IMAGE | del(.status,.taskDefinitionArn,.revision,.requiresAttributes,.compatibilities)')
-        echo $FRONTEND_NEW_TASK > frontend-task.json
+        echo "Creating new frontend task definition revision..."    
+        echo $FRONTEND_TASK_DEFINITION | jq '
+          .taskDefinition | 
+          del(.status, .taskDefinitionArn, .revision, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy, .registeredResource, .arn) |
+          .containerDefinitions[0].image = "samuelokasia/realtime-fraud-frontend:latest"
+        ' > frontend-task.json
         aws ecs register-task-definition --cli-input-json file://frontend-task.json
-    
+  
     - name: Update frontend service
       run: |
         NEW_FRONTEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-frontend-task --query 'taskDefinition.revision' --output text)
