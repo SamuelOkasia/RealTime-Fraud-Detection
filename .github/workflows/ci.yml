@@ -80,22 +80,22 @@ jobs:
         docker tag fraud-detection-frontend:latest samuelokasia/realtime-fraud-frontend:latest
         docker push samuelokasia/realtime-fraud-frontend:latest
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-west-2 
-
+        - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2 # Correct region
+      
     - name: Register new backend task definition
       id: register-backend-task
       run: |
-        BACKEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task)
+        BACKEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task:9)
         echo "Creating new backend task definition revision..."
         BACKEND_NEW_TASK=$(echo $BACKEND_TASK_DEFINITION | jq --arg IMAGE "samuelokasia/realtime-fraud-backend:latest" '.taskDefinition | .containerDefinitions[0].image=$IMAGE | del(.status,.taskDefinitionArn,.revision,.requiresAttributes,.compatibilities)')
         echo $BACKEND_NEW_TASK > backend-task.json
         aws ecs register-task-definition --cli-input-json file://backend-task.json
-  
+    
     - name: Update backend service
       run: |
         NEW_BACKEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task --query 'taskDefinition.revision' --output text)
@@ -104,7 +104,7 @@ jobs:
     - name: Register new frontend task definition
       id: register-frontend-task
       run: |
-        FRONTEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-frontend-task)
+        FRONTEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-frontend-task:18)
         echo "Creating new frontend task definition revision..."
         FRONTEND_NEW_TASK=$(echo $FRONTEND_TASK_DEFINITION | jq --arg IMAGE "samuelokasia/realtime-fraud-frontend:latest" '.taskDefinition | .containerDefinitions[0].image=$IMAGE | del(.status,.taskDefinitionArn,.revision,.requiresAttributes,.compatibilities)')
         echo $FRONTEND_NEW_TASK > frontend-task.json
