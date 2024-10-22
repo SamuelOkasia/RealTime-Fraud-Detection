@@ -79,3 +79,46 @@ jobs:
         docker build -t fraud-detection-frontend:latest ./frontend
         docker tag fraud-detection-frontend:latest samuelokasia/realtime-fraud-frontend:latest
         docker push samuelokasia/realtime-fraud-frontend:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-2
+
+    # Register a new ECS backend task definition
+    - name: Register new ECS backend task definition
+      run: |
+        aws ecs register-task-definition \
+          --family fraud-backend-task \
+          --cli-input-json file://ecs-backend-task-definition.json
+
+    # Register a new ECS frontend task definition
+    - name: Register new ECS frontend task definition
+      run: |
+        aws ecs register-task-definition \
+          --family fraud-frontend-task \
+          --cli-input-json file://ecs-frontend-task-definition.json
+
+    # Update ECS services to use the new task definition revision
+    - name: Deploy Backend to ECS
+      run: |
+        aws ecs update-service --cluster fraud-detection-cluster \
+          --service fraud-backend-service \
+          --force-new-deployment
+
+    - name: Deploy Frontend to ECS
+      run: |
+        aws ecs update-service --cluster fraud-detection-cluster \
+          --service fraud-frontend-service \
+          --force-new-deployment
