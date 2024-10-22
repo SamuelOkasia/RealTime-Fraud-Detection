@@ -1,4 +1,5 @@
 # Real-Time Fraud Detection System
+---
 
 ## Project Overview
 
@@ -28,9 +29,12 @@ The Real-Time Fraud Detection System is designed to detect fraudulent transactio
 - **Fraud Detection:** The system processes transactions and identifies potential fraud in real-time.
 - **High Scalability:** The microservice architecture and AWS services ensure scalability to handle heavy traffic.
 - **Real-Time Communication:** The WebSocket connection pushes transaction updates to clients instantly.
+---
 
 ## Architecture Diagram
 ![Architecture Diagram](./architecture-diagram.png)
+
+---
 
 ## Architecture Overview
 
@@ -99,7 +103,7 @@ The Real-Time Fraud Detection System follows a microservice architecture and lev
         2. **Model Call:** The backend calls the machine learning model to classify the transaction as either "fraudulent" or "legitimate."
         3. **Result Processing:** Based on the model's prediction, the transaction is marked as fraudulent or legitimate, and an appropriate response is sent back to the client.
         4. **Real-Time WebSocket Notification:** If the transaction is marked as fraudulent, a WebSocket event is triggered to notify the frontend in real-time.
-
+---
 ## Infrastructure Setup
 
 ### 1. AWS ECS Fargate Setup (Frontend & Backend)
@@ -172,7 +176,7 @@ The FastAPI backend provides a comprehensive API for interacting with transactio
    - A simple health check endpoint to ensure the backend is running.
    - **Response:** `200 OK` if the service is running.
    
-   
+---   
 ## How to Run Locally
 
 ### Prerequisites
@@ -207,6 +211,7 @@ Run the following command to start both the backend and frontend services:
 4. ***Accessing the Application***
     - Frontend: http://localhost:3001
     - Backend API (Swagger): http://localhost:8000/docs
+---
 
 ## WebSocket Event Flows
 
@@ -277,7 +282,43 @@ In case of connection failures or errors, the frontend handles reconnections gra
 ### WebSocket Use Cases in the Project
 - Transaction Updates: After a user submits a transaction, the frontend receives real-time updates on whether the transaction has been processed, approved, or marked as fraudulent.
 -  Fraud Alerts: If a transaction is flagged as fraudulent during processing, the system pushes an instant alert to the connected client(s) via WebSocket.
+---
+## Continuous Integration / Continuous Deployment (CI/CD)
+This project uses GitHub Actions for Continuous Integration (CI) and Continuous Deployment (CD) to automate testing, building, and deployment of both the backend and frontend services.
+### CI/CD Pipeline Overview
+1. **Continuous Integration (CI):**
+    - The CI pipeline is triggered on every push to the main branch and on pull requests.
+    - It performs the following steps:
+      - Backend Tests: Runs unit tests using pytest to ensure the backend functionality is working as expected.
+      - Frontend Build: Installs dependencies and builds the frontend using npm.
+      - Docker Builds: Docker images for both backend and frontend are built.
 
+2. **Docker Push:**
+    - Once the tests pass and Docker images are built, the following images are pushed to Docker Hub:
+      - `samuelokasia/realtime-fraud-backend:latest`
+      - `samuelokasia/realtime-fraud-frontend:latest`
+
+3. **Continuous Deployment (CD):**
+    - After the build stage, the CD pipeline automatically deploys the newly built Docker images to AWS ECS.
+    - AWS ECS Deployment:
+      - The task definitions for both backend and frontend services are updated with the new Docker images.
+      - The ECS services are then updated to the latest task definition revision, ensuring the latest code is running in production.
+
+### Secrets and Environment Variables
+  - Docker Hub Credentials:
+    - The pipeline uses GitHub Secrets for securely storing Docker Hub credentials (DOCKER_USERNAME, DOCKER_PASSWORD), which are required for logging in and pushing Docker images.
+  - AWS Credentials:
+    - The pipeline uses GitHub Secrets for AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY) to authenticate and deploy the updated task definitions to ECS.
+
+### GitHub Actions CI/CD Workflow
+The pipeline is fully automated through GitHub Actions. It consists of two stages:
+
+  - Build Stage: Responsible for testing, building, and pushing Docker images to Docker Hub.
+  - Deploy Stage: Responsible for updating the ECS task definitions and services with the new images.
+
+The full workflow file is located in .github/workflows/ci.yml and ensures that the project is continuously tested and deployed whenever changes are made.
+
+---
 
 ## Monitoring & Alerting
 
