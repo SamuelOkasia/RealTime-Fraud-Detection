@@ -1,0 +1,33 @@
+{
+    "family": "fraud-backend-task",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+      {
+        "name": "fraud-backend-container",
+        "image": "786955137666.dkr.ecr.eu-west-2.amazonaws.com/realtime-fraud-backend:latest",
+        "cpu": 256,
+        "memory": 512,
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 8000,
+            "hostPort": 8000,
+            "protocol": "tcp"
+          }
+        ],
+        "environment": [
+          { "name": "POSTGRES_USER", "value": "fraud_app" },
+          { "name": "POSTGRES_PASSWORD", "value": "your_password" },
+          { "name": "POSTGRES_DB", "value": "transactions_db" },
+          { "name": "POSTGRES_HOST", "value": "fraud-detection-db.c7ei8ge0w0xu.eu-west-2.rds.amazonaws.com" },
+          { "name": "KAFKA_BROKER", "value": "boot-qynae52l.c1.kafka-serverless.eu-west-2.amazonaws.com:9098" }
+        ]
+      }
+    ],
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::786955137666:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::786955137666:role/ecsTaskExecutionRole"
+  }
+  
