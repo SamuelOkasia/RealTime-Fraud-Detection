@@ -80,45 +80,38 @@ jobs:
         docker tag fraud-detection-frontend:latest samuelokasia/realtime-fraud-frontend:latest
         docker push samuelokasia/realtime-fraud-frontend:latest
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-2
+        aws-region: us-west-2 
 
-    # Register a new ECS backend task definition
-    - name: Register new ECS backend task definition
+    - name: Register new backend task definition
+      id: register-backend-task
       run: |
-        aws ecs register-task-definition \
-          --family fraud-backend-task \
-          --cli-input-json file://ecs-backend-task-definition.json
-
-    # Register a new ECS frontend task definition
-    - name: Register new ECS frontend task definition
+        BACKEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task)
+        echo "Creating new backend task definition revision..."
+        BACKEND_NEW_TASK=$(echo $BACKEND_TASK_DEFINITION | jq --arg IMAGE "samuelokasia/realtime-fraud-backend:latest" '.taskDefinition | .containerDefinitions[0].image=$IMAGE | del(.status,.taskDefinitionArn,.revision,.requiresAttributes,.compatibilities)')
+        echo $BACKEND_NEW_TASK > backend-task.json
+        aws ecs register-task-definition --cli-input-json file://backend-task.json
+  
+    - name: Update backend service
       run: |
-        aws ecs register-task-definition \
-          --family fraud-frontend-task \
-          --cli-input-json file://ecs-frontend-task-definition.json
-
-    # Update ECS services to use the new task definition revision
-    - name: Deploy Backend to ECS
+        NEW_BACKEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task --query 'taskDefinition.revision' --output text)
+        aws ecs update-service --cluster RealTime-Fraud-Detection --service backend-service --task-definition fraud-detection-backend-task:$NEW_BACKEND_REVISION
+    
+    - name: Register new frontend task definition
+      id: register-frontend-task
       run: |
-        aws ecs update-service --cluster fraud-detection-cluster \
-          --service fraud-backend-service \
-          --force-new-deployment
-
-    - name: Deploy Frontend to ECS
+        FRONTEND_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition fraud-detection-frontend-task)
+        echo "Creating new frontend task definition revision..."
+        FRONTEND_NEW_TASK=$(echo $FRONTEND_TASK_DEFINITION | jq --arg IMAGE "samuelokasia/realtime-fraud-frontend:latest" '.taskDefinition | .containerDefinitions[0].image=$IMAGE | del(.status,.taskDefinitionArn,.revision,.requiresAttributes,.compatibilities)')
+        echo $FRONTEND_NEW_TASK > frontend-task.json
+        aws ecs register-task-definition --cli-input-json file://frontend-task.json
+    
+    - name: Update frontend service
       run: |
-        aws ecs update-service --cluster fraud-detection-cluster \
-          --service fraud-frontend-service \
-          --force-new-deployment
+        NEW_FRONTEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-frontend-task --query 'taskDefinition.revision' --output text)
+        aws ecs update-service --cluster RealTime-Fraud-Detection --service frontend-service --task-definition fraud-detection-frontend-task:$NEW_FRONTEND_REVISION
+    
