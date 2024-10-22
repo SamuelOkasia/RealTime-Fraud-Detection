@@ -80,6 +80,10 @@ jobs:
         docker tag fraud-detection-frontend:latest samuelokasia/realtime-fraud-frontend:latest
         docker push samuelokasia/realtime-fraud-frontend:latest
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build 
+    steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
