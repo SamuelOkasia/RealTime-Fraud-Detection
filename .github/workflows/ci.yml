@@ -80,12 +80,12 @@ jobs:
         docker tag fraud-detection-frontend:latest samuelokasia/realtime-fraud-frontend:latest
         docker push samuelokasia/realtime-fraud-frontend:latest
 
-        - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2 # Correct region
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-2 # Correct region
       
     - name: Register new backend task definition
       id: register-backend-task
