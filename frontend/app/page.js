@@ -78,7 +78,7 @@ export default function Home() {
 
        {/* Informational message about Kafka service being down */}
        <Alert 
-          message="Due to the running cost of using AWS Kafka, the Kafka service is currently not running. For demonstration purposes, please watch the video below showing the full Fraud Detection service in action."
+          message="Due to the running cost of using Amazon MSK, the Kafka service is currently not running. For demonstration purposes, please watch the video below showing the full Fraud Detection service in action."
           type="info"
           showIcon 
         />
