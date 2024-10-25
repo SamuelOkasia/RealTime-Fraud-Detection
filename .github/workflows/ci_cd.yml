@@ -84,33 +84,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-2 # Correct region
-
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.5.0
-
-    - name: Terraform Init
-      run: terraform init
-      working-directory: ./terraform  
-
-    - name: Terraform Plan
-      run: terraform plan
-      working-directory: ./terraform  
-
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
-      working-directory: ./terraform 
-
+      
     - name: Register new backend task definition
       id: register-backend-task
       run: |
@@ -121,7 +101,7 @@ jobs:
           .containerDefinitions[0].image = "samuelokasia/realtime-fraud-backend:latest"')
         echo $BACKEND_NEW_TASK > backend-task.json
         aws ecs register-task-definition --cli-input-json file://backend-task.json
-
+      
     - name: Update backend service
       run: |
         NEW_BACKEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-backend-task --query 'taskDefinition.revision' --output text)
@@ -138,8 +118,9 @@ jobs:
           .containerDefinitions[0].image = "samuelokasia/realtime-fraud-frontend:latest"
         ' > frontend-task.json
         aws ecs register-task-definition --cli-input-json file://frontend-task.json
-
+  
     - name: Update frontend service
       run: |
         NEW_FRONTEND_REVISION=$(aws ecs describe-task-definition --task-definition fraud-detection-frontend-task --query 'taskDefinition.revision' --output text)
         aws ecs update-service --cluster RealTime-Fraud-Detection --service frontend-service --task-definition fraud-detection-frontend-task:$NEW_FRONTEND_REVISION
+    
