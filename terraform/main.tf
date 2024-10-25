@@ -6,8 +6,6 @@ provider "aws" {
 resource "aws_ecs_cluster" "fraud_detection_cluster" {
   name = "RealTime-Fraud-Detection"
 
-  # capacity_providers = ["FARGATE", "FARGATE_SPOT"]
-
   service_connect_defaults {
     namespace = "arn:aws:servicediscovery:eu-west-2:786955137666:namespace/ns-di5lktrutt3wx3n7"
   }
