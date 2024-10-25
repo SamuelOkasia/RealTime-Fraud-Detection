@@ -60,3 +60,8 @@ check.py
 
 # Ignore migrations cache (if required)
 backend/migrations/__pycache__/
+
+# Ignore Terraform directories
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
