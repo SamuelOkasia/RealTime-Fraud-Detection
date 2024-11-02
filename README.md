@@ -8,6 +8,10 @@ The Real-Time Fraud Detection System is designed to detect fraudulent transactio
 
 **[Live Demo](http://fraud-detection-alb-467209949.eu-west-2.elb.amazonaws.com/)**
 
+⚠️ **Note**: The live demo is currently unavailable due to AWS cost constraints. I've had to take it down to manage expenses effectively. However, you can still get a sense of the application's functionality by checking out the demo video below 
+
+<video controls src="frontend/public/videos/demo.mp4" title="Title"></video>
+
 ### Tech Stack
 - **Frontend:** React (JavaScript)
 - **Backend:** FastAPI (Python)
